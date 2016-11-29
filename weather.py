@@ -33,7 +33,7 @@ def main():
     print("The percipitation is {}".format(current[3]))
     print("The overall weather is {}".format(current[4]))
     print('\n')
-    print("Ten Day Forcast: ")
+    print("Ten Day Forecast: ")
     tendayforcast = TenDay()
     tendayf = tendayforcast.get(zipcode)
     print("{} you can expect {}".format(tendayf[0], tendayf[1]))
