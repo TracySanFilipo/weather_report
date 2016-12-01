@@ -9,20 +9,7 @@ def userinput():
     return zipcode
 
 
-def main():
-    while True:
-        zipcode = userinput()
-        if len(zipcode) == 5:
-            code = []
-            for item in zipcode:
-                if item in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
-                    code.append(item)
-            if len(code) == 5:
-                break
-            else:
-                print("It must be five numbers")
-        else:
-            print("That is not five digits")
+def displaycurrent(zipcode):
     print('\n')
     print("Current Weather: ")
     current_weather = Currentconditions()
@@ -33,6 +20,9 @@ def main():
     print("The percipitation is {}".format(current[3]))
     print("The overall weather is {}".format(current[4]))
     print('\n')
+
+
+def displaytendays(zipcode):
     print("Ten Day Forecast: ")
     tendayforcast = TenDay()
     tendayf = tendayforcast.get(zipcode)
@@ -47,22 +37,53 @@ def main():
     print("{} you can expect {}".format(tendayf[16], tendayf[17]))
     print("{} you can expect {}".format(tendayf[18], tendayf[19]))
     print('\n')
+
+
+def displaysunrise(zipcode):
     print("Sunrise and Sunset: ")
     sunriseset = SunriseSunset()
     sunrise = sunriseset.get(zipcode)
     print("Sunrise {}:{}".format(sunrise[0], sunrise[1]))
     print("Sunset {}:{}".format(sunrise[2], sunrise[3]))
     print('\n')
+
+
+def displayalerts(zipcode):
     print("Alerts for your area: ")
     warnings = Alerts()
     warning = warnings.get(zipcode)
     print("Alerts: {}".format(warning))
     print('\n')
+
+
+def displaystorms():
     print("Storms: ")
     storms = Hurricane()
     storm = storms.get(zipcode)
     print("Current Storms: {}".format(storm))
     print('\n')
+
+
+def main():
+    while True:
+        zipcode = userinput()
+        if len(zipcode) == 5:
+            code = []
+            for item in zipcode:
+                if item in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
+                    code.append(item)
+            if len(code) == 5:
+                break
+            else:
+                print("It must be five numbers")
+        else:
+            print("That is not five digits")
+    displaycurrent(zipcode)
+    displaytendays(zipcode)
+    displaysunrise(zipcode)
+    displayalerts(zipcode)
+    displaystorms()
+
 
 if __name__ == "__main__":
     main()
