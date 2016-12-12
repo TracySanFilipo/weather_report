@@ -11,11 +11,12 @@ class Currentconditions:
         self.zipcode = zipcode
         address = "http://api.wunderground.com/api/5a7e29d09f0d254e/conditions/settings/q/{}.json".format(zipcode)
         r = requests.get(address)
-        temperature = r.json()["current_observation"]["temp_f"]
-        windspeed = r.json()["current_observation"]["wind_mph"]
-        winddirection = r.json()["current_observation"]["wind_dir"]
-        percipitation = r.json()["current_observation"]["precip_today_string"]
-        weather = r.json()["current_observation"]["weather"]
+        current = r.json()["current_observation"]
+        temperature = current["temp_f"]
+        windspeed = current["wind_mph"]
+        winddirection = current["wind_dir"]
+        percipitation = current["precip_today_string"]
+        weather = current["weather"]
         return [temperature, windspeed, winddirection, percipitation, weather]
 
 
@@ -29,7 +30,7 @@ class TenDay:
         r = requests.get(address)
         tenday = r.json()["forecast"]["txt_forecast"]["forecastday"]
         alldays = []
-        for number in [0, 2, 4, 6, 8, 10, 12, 14, 16, 18]:
+        for number in range(0, 20, 2):
             day = tenday[number]["title"]
             alldays.append(day)
             weather = tenday[number]["fcttext"]
@@ -42,13 +43,14 @@ class SunriseSunset:
 
     def get(self, zipcode):
         self.zipcode = zipcode
-        address = "http://api.wunderground.com/api/5a7e29d09f0d254e/astronomy/settings/q/" + str(zipcode) + ".json"
+        address = "http://api.wunderground.com/api/5a7e29d09f0d254e/astronomy/settings/q/{}.json".format(zipcode)
         r = requests.get(address)
-        sunrisehour = r.json()["moon_phase"]["sunrise"]["hour"]
-        sunriseminute = r.json()["moon_phase"]["sunrise"]["minute"]
-        sunsethour = r.json()["moon_phase"]["sunset"]["hour"]
-        sunsetminute = r.json()["moon_phase"]["sunset"]["minute"]
-        return [str(sunrisehour), str(sunriseminute), str(sunsethour), str(sunsetminute)]
+        sun = r.json()["moon_phase"]
+        sunrise_hr = sun["sunrise"]["hour"]
+        sunrise_min = sun["sunrise"]["minute"]
+        sunset_hr = sun["sunset"]["hour"]
+        sunset_min = sun["sunset"]["minute"]
+        return [str(sunrise_hr), str(sunrise_min), str(sunset_hr), str(sunset_min)]
 
 
 class Alerts:
@@ -57,26 +59,29 @@ class Alerts:
 
     def get(self, zipcode):
         self.zipcode = zipcode
-        address = "http://api.wunderground.com/api/5a7e29d09f0d254e/alerts/settings/q/" + str(zipcode) + ".json"
+        address = "http://api.wunderground.com/api/5a7e29d09f0d254e/alerts/settings/q/{}.json".format(zipcode)
         r = requests.get(address)
         results = r.json()["alerts"]
         if len(results) == 0:
             return "no alerts"
         else:
-            return r.json()["alerts"]["type"]
-
+            alerts_list = []
+            for i in range(0, len(results)):
+                alerts_list.append(results[i]["description"])
+            return alerts_list
 
 class Hurricane():
     def __init__(self):
         pass
 
-    def get(self, zipcode):
-        self.zipcode = zipcode
-        address = "http://api.wunderground.com/api/5a7e29d09f0d254e/currenthurricane/settings/q/{}.json".format(zipcode)
-        r = requests.get(address)
-        try:
-            storm = r.json()["currenthurricane"][0]["stormInfo"]["stormName_Nice"]
-        except IndexError:
+    def get(self):
+        hurricanes = "http://api.wunderground.com/api/5a7e29d09f0d254e/currenthurricane/view.json"
+        r = requests.get(hurricanes)
+        storm = r.json()["currenthurricane"]
+        if len(storm) == 0:
             return "no storms"
         else:
-            return storm
+            storm_list = []
+            for i in range(0, len(storm)):
+                storm_list.append(storm[i]["stormInfo"]["stormName_Nice"])
+            return storm_list

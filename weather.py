@@ -26,16 +26,8 @@ def displaytendays(zipcode):
     print("Ten Day Forecast: ")
     tendayforcast = TenDay()
     tendayf = tendayforcast.get(zipcode)
-    print("{} you can expect {}".format(tendayf[0], tendayf[1]))
-    print("{} you can expect {}".format(tendayf[2], tendayf[3]))
-    print("{} you can expect {}".format(tendayf[4], tendayf[5]))
-    print("{} you can expect {}".format(tendayf[6], tendayf[7]))
-    print("{} you can expect {}".format(tendayf[8], tendayf[9]))
-    print("{} you can expect {}".format(tendayf[10], tendayf[11]))
-    print("{} you can expect {}".format(tendayf[12], tendayf[13]))
-    print("{} you can expect {}".format(tendayf[14], tendayf[15]))
-    print("{} you can expect {}".format(tendayf[16], tendayf[17]))
-    print("{} you can expect {}".format(tendayf[18], tendayf[19]))
+    for i in range(0, 20, 2):
+        print("{} you can expect {}".format(tendayf[i], tendayf[(i + 1)]))
     print('\n')
 
 
@@ -52,15 +44,23 @@ def displayalerts(zipcode):
     print("Alerts for your area: ")
     warnings = Alerts()
     warning = warnings.get(zipcode)
-    print("Alerts: {}".format(warning))
+    if warning == "no alerts":
+        print("No Alerts")
+    else:
+        warning_format = ", ".join(warning)
+        print("Alerts: {}".format(warning_format))
     print('\n')
 
 
 def displaystorms():
     print("Storms: ")
     storms = Hurricane()
-    storm = storms.get(zipcode)
-    print("Current Storms: {}".format(storm))
+    current_storms = storms.get()
+    if current_storms == "no storms":
+        print("No Storms")
+    else:
+        storms_format = ", ".join(current_storms)
+        print("Current Storms: {}".format(storms_format))
     print('\n')
 
 
@@ -69,9 +69,9 @@ def main():
         zipcode = userinput()
         if len(zipcode) == 5:
             code = []
-            for item in zipcode:
-                if item in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
-                    code.append(item)
+            for i in zipcode:
+                if i in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
+                    code.append(i)
             if len(code) == 5:
                 break
             else:
